@@ -14,7 +14,7 @@ public class LexicalAnalyzer {
         Set<String> operatorSet = new HashSet<>();
         Set<String> symbolSet = new HashSet<>();
         Set<String> literalSet = new HashSet<>();
-        Set<String> identifierSet = new LinkedHashSet<>();
+        Set<String> identifierSet = new HashSet<>();
         List<String> allWords = new ArrayList<>();
 
         try (BufferedReader br = new BufferedReader(new FileReader("Source.txt"))) {
