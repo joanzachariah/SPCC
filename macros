@@ -1,0 +1,205 @@
+FACTORIAL
+.c
+#include<stdio.h>
+#include"FACT.h"
+
+int main(){
+	
+	int f =1, i , num;
+	
+	printf("Enter the number");
+	scanf("%d",&num);
+	fact(num);
+	printf("The Factorial is : %d",f);
+	
+	return 0;
+}
+
+.h
+#define fact(num)\
+for(i=1;i<=num;i++)\
+{\
+f = i*f;\
+}
+
+
+AREA
+.c
+#include<stdio.h>
+#include"AREA.H"
+
+void main(){
+	
+	int l , b,option;
+	
+	printf("Menu\n1.AREA OF RECTANGLE\n2.AREA OF SQUARE\n3.Exit\n");
+	
+	while (option!=3){
+		printf("\nEnter the choice\n");
+		scanf("%d",&option);
+		
+	switch (option){
+		
+		
+		case 1 : printf("Enter the Length and Breadth\n");
+					scanf("%d%d",&l,&b);
+				printf("The Area of Rectangle is %d\n",rectangle(l,b));
+				break;
+		case 2 : printf("Enter the Side of Square\n");
+					scanf("%d",&l);
+				printf("The Area of Square is %d\n",square(l));
+				break;
+		case 3 : 
+			break;			
+	}
+	}
+		
+	}
+
+.h
+#define rectangle(l,b) (l*b)
+#define square(l) (l*l)
+
+GREATEST
+.c
+#include<stdio.h>
+#include"GREATEST.H"
+
+void main(){
+	
+	int a ,b;
+	printf("Enter 2 Numbers \n");
+	scanf("%d%d",&a,&b);
+	printf("The Greatest Number is %d",max(a,b));
+}
+
+.h
+#define max(a,b) (a>b?a:b)
+
+BIN to DECI, BIN to HEXADECI
+.c
+#include<Stdio.h>
+#include<String.h>
+#include<Stdlib.h>
+#include"CONVERSION.H"
+
+void main(){
+	int choice,i;
+	char input[64];
+	long decimal;
+	
+	printf("\n===== NUMBER CONVERSION MENU =====\n");
+    printf("1. Binary to Decimal\n");
+    printf("2. Decimal to Binary\n");
+    printf("3. Binary to Hexadecimal\n");
+    printf("4. Hexadecimal to Binary\n");
+    printf("5. Exit\n");
+    printf("Enter your choice (1-5): ");
+	
+	
+	while(choice!=5){
+		printf("Enter the Choice");
+		scanf("%d",&choice);
+		
+		
+		switch(choice){
+			case 1 : printf("Enter the Binary number : ");
+			scanf("%s",&input);
+			decimal =BIN_TO_DEC(input);
+			printf("The Decimal value is : %ld",decimal);
+			printf("\n");
+			break;
+			
+			case 2 : printf("Enter the Decimal number : ");
+			scanf("%ld",&decimal);
+			printf("The Binary value is \n");
+			 DEC_TO_BIN(decimal);
+			 printf("\n");
+			break;
+		
+			case 3 : printf("Enter the Binary number : ");
+			scanf("%s",&input);
+			decimal = BIN_TO_HEX(input);
+			printf("The hexadecimal value is : %lx",decimal);
+			printf("\n");
+			break;
+		
+			case 4 : printf("Enter the Haxdecimal number : ");
+			scanf("%s",&input);
+			printf("The Binary value is \n");
+			 HEX_TO_BIN(input);
+			 printf("\n");
+			break;
+			
+			case 5 : break;
+		
+			
+
+		}
+	} 
+
+}
+
+.h
+#define BIN_TO_DEC(input) strtol(input,NULL,2) 
+#define BIN_TO_HEX(input) strtol(input,NULL,2)
+
+#define DEC_TO_BIN(input) ({ \
+    int index = 0; \
+    int temp[64]; \
+    int num = input; \
+    if (num == 0) { \
+        printf("0"); \
+    } else { \
+        while (num > 0) { \
+            temp[index++] = num % 2; \
+            num = num / 2; \
+        } \
+        for( i = index - 1; i >= 0; i--) { \
+            printf("%d", temp[i]); \
+        } \
+    } \
+})
+
+
+#define HEX_TO_BIN(input)({\
+long num = strtol(input,NULL,16);\
+int index = 0; \
+    int temp[64]; \
+    if (num == 0) { \
+        printf("0"); \
+    } else { \
+        while (num > 0) { \
+            temp[index++] = num % 2; \
+            num /= 2; \
+        } \
+        for ( i = index - 1; i >= 0; i--) { \
+            printf("%d", temp[i]); \
+        } \
+    } \
+})
+
+FACTORS
+.c
+#include<stdio.h>
+#include"FACTORS.H"
+
+void main(){
+	
+	int i , num;
+	printf("Enter the Number\n");
+	scanf("%d",&num);
+	factors(num);
+}
+
+.h
+#define factors(num)\
+{\
+for(i=1 ; i <= num ; i++)\
+{\
+if(num%i==0)\
+{\
+printf(" %d ",i);\
+}\
+}\
+}
