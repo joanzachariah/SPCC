@@ -61,103 +61,65 @@ int main(){
 
 /* Write a LEX program to count and identify tokens */
 
+%option noyywrap
 %{
 #include <stdio.h>
-#include <string.h>
 
-int n = 0;
-char keywords[100][50];
-char identifiers[100][50];
-char operators[100][50];
-char punctuations[100][50];
-char literals[100][50];
-int kw = 0, id = 0, op = 0, punc = 0, lit = 0;
+int keyword_count = 0, identifier_count = 0, number_count = 0;
+int operator_count = 0, punctuation_count = 0;
 %}
 
-%%
-
-"while"|"if"|"else"|"int"|"float" {
-    n++;
-    printf("\t keyword : %s", yytext);
-    strcpy(keywords[kw++], yytext);
-}
-
-[a-zA-Z_][a-zA-Z0-9_]* {
-    n++;
-    printf("\t identifier : %s", yytext);
-    strcpy(identifiers[id++], yytext);
-}
-
-"<="|"=="|"="|"++"|"-"|"*"|"+" {
-    n++;
-    printf("\t operator : %s", yytext);
-    strcpy(operators[op++], yytext);
-}
-
-[(){}|,;] {
-    n++;
-    printf("\t punctuation : %s", yytext);
-    strcpy(punctuations[punc++], yytext);
-}
-
-[0-9]+|[0-9]*"."[0-9]+ {
-    n++;
-    printf("\t literal : %s", yytext);
-    strcpy(literals[lit++], yytext);
-}
-
-[ \t\n]+ { /* Skip whitespace */ }
-
-. { /* Ignore other characters */ }
+keyword     "if"|"else"|"while"|"return"|"int"|"float"|"char"|"void"
+identifier  [a-zA-Z_][a-zA-Z0-9_]*
+number      [0-9]+|[0-9]*"."[0-9]+
+operator    [+\-*/=<>!&|]
+punctuation [(){};,.]
 
 %%
-
-void print_token_summary() {
-    int i;
-    
-    printf("\n\n----- TOKEN SUMMARY -----\n");
-    printf("\nTotal number of tokens: %d\n", n);
-    
-    printf("\nKeywords (%d):", kw);
-    for(i = 0; i < kw; i++) {
-        printf(" %s", keywords[i]);
-        if(i < kw-1) printf(",");
-    }
-    
-    printf("\nIdentifiers (%d):", id);
-    for(i = 0; i < id; i++) {
-        printf(" %s", identifiers[i]);
-        if(i < id-1) printf(",");
-    }
-    
-    printf("\nOperators (%d):", op);
-    for(i = 0; i < op; i++) {
-        printf(" %s", operators[i]);
-        if(i < op-1) printf(",");
-    }
-    
-    printf("\nPunctuations (%d):", punc);
-    for(i = 0; i < punc; i++) {
-        printf(" %s", punctuations[i]);
-        if(i < punc-1) printf(",");
-    }
-    
-    printf("\nLiterals (%d):", lit);
-    for(i = 0; i < lit; i++) {
-        printf(" %s", literals[i]);
-        if(i < lit-1) printf(",");
-    }
-    
-    printf("\n\n");
+{keyword} {
+    keyword_count++;
+    printf("\nKeyword: %s\n", yytext);
+    fflush(stdout);
 }
 
-int yywrap() {
-    return 1;
+{identifier} {
+    identifier_count++;
+    printf("Identifier: %s\n", yytext);
+    fflush(stdout);
 }
+
+{number} {
+    number_count++;
+    printf("Number: %s\n", yytext);
+    fflush(stdout);
+}
+
+{operator} {
+    operator_count++;
+    printf("Operator: %s\n", yytext);
+    fflush(stdout);
+}
+
+{punctuation} {
+    punctuation_count++;
+    printf("Punctuation: %s\n", yytext);
+    fflush(stdout);
+}
+
+"\n" {
+    printf("\nTotal Keywords: %d\n", keyword_count);
+    printf("Total Identifiers: %d\n", identifier_count);
+    printf("Total Numbers: %d\n", number_count);
+    printf("Total Operators: %d\n", operator_count);
+    printf("Total Punctuations: %d\n", punctuation_count);
+    fflush(stdout);
+}
+%%
 
 int main() {
+    printf("Give your input: \n");
+    fflush(stdout);
     yylex();
-    printf("\n total no. of token = %d\n", n);
-    print_token_summary();
     return 0;
 }
+
