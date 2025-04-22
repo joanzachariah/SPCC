@@ -1,0 +1,79 @@
+def generate_precedence_table():
+    """Generates the precedence table for the given grammar."""
+    return {
+        '+': {'+': '>', '*': '<', 'id': '<', '$': '>'},
+        '*': {'+': '>', '*': '>', 'id': '<', '$': '>'},
+        'id': {'+': '>', '*': '>', 'id': '-', '$': '>'},
+        '$': {'+': '<', '*': '<', 'id': '<', '$': 'accept'}
+    }
+
+def display_table():
+    """Displays the precedence table."""
+    table = generate_precedence_table()
+    print("\nPrecedence Table:")
+    print("    |   +  |  *  |  id |  $ ")
+    print("---------------------------")
+    for row in ['+', '*', 'id', '$']:
+        print(f" {row:<2} | {table[row].get('+',''):<2}  | {table[row].get('*',''):<2}  | "
+              f"{table[row].get('id',''):<2} | {table[row].get('$',''):<2}")
+
+def precedence_parser(input_string):
+    """Parses the input string using operator precedence parsing."""
+    operators = ['+', '*', 'id', '$']
+    table = generate_precedence_table()
+    
+    # Tokenize input
+    tokens = []
+    i = 0
+    while i < len(input_string):
+        if input_string[i:i+2] == 'id':
+            tokens.append('id')
+            i += 2
+        else:
+            tokens.append(input_string[i])
+            i += 1
+    tokens.append('$')
+
+    stack = ['$']
+    i = 0  # Input pointer
+    print("\nParsing Table:")
+    print(f"         Stack               |             Input      |           Action")
+    print("-------------------------------------------------------")
+
+    while True:
+        # Get topmost terminal from stack
+        stack_top = next((s for s in reversed(stack) if s in operators), None)
+        current_token = tokens[i]
+        
+        stack_str = ' '.join(stack)
+        input_str = ' '.join(tokens[i:])
+
+        if stack_top == '$' and current_token == '$':
+            print(f"{stack_str:<30} | {input_str:<20} | Accept")
+            break
+        
+        relation = table.get(stack_top, {}).get(current_token, None)
+
+        if relation in ['<', '=']:
+            print(f"{stack_str:<30} | {input_str:<20} | Shift {current_token}")
+            stack.append(current_token)
+            i += 1
+
+        elif relation == '>':
+            if len(stack) >= 2 and stack[-1] == 'id':
+                stack[-1] = 'E'
+                print(f"{stack_str:<30} | {input_str:<20} | Reduce: id -> E")
+            elif len(stack) >= 3 and stack[-2] in ['+', '*'] and stack[-1] == 'E' and stack[-3] == 'E':
+                operator = stack[-2]
+                stack[-3:] = ['E']
+                print(f"{stack_str:<30} | {input_str:<20} | Reduce: E {operator} E -> E")
+        else:
+            print(f"{stack_str:<30} | {input_str:<20} | Error: Invalid relation")
+            return False
+
+    return True
+
+# Test the parser
+input_string = "id+id*id"
+display_table()
+precedence_parser(input_string)
