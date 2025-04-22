@@ -82,6 +82,11 @@ for _ in range(n):
 quadruples = generate_quadruples(statements)
 display_quadruples(quadruples)
 
+input:
+f = c + d
+e = a - f
+g = b * e
+
 
 
 
