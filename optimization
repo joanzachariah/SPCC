@@ -36,3 +36,12 @@ optimized = optimize_code(lines)
 print("\nafter optimization")
 for line in optimized:
     print(line)
+
+
+-----create a input.txt file ----------
+T1=5*3+10
+T3=T1
+T2=T1+T3
+T5=4*T2
+T6=4*T2+100
+
