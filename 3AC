@@ -1,0 +1,137 @@
+3AC
+def convert_to_three_address_code(expression):
+    left, right = expression.split("=")
+    temp_count = 1
+    result = []
+
+    while "(" in right:
+        open_idx = right.find("(")
+        close_idx = open_idx + 1
+        count = 1
+        while count > 0:
+            if right[close_idx] == "(":
+                count += 1
+            if right[close_idx] == ")":
+                count -= 1
+            close_idx += 1
+        close_idx -= 1
+
+        subexpr = right[open_idx+1:close_idx]
+        temp_var = process_operation(subexpr, temp_count, result)
+        temp_count += 1
+        right = right[:open_idx] + temp_var + right[close_idx+1:]
+
+    if any(op in right for op in ['+', '-', '*', '/']):
+        temp_var = process_operation(right, temp_count, result)
+        result.append(f"{left} = {temp_var}")
+    else:
+        result.append(f"{left} = {right}")
+    return result
+
+def process_operation(expr, temp_count, result):
+    for op in ['+','-','*']:
+        if op in expr:
+            result.append(f"t{temp_count} = {expr} ")
+            return f"t{temp_count}"
+
+expression = "x=(a+b)*(c-d)"
+three_address_code = convert_to_three_address_code(expression)
+print("Original expression:", expression)
+print("\nThree address code:")
+for code in three_address_code:
+    print(code)
+
+
+
+
+QUADRUPLES
+def generate_quadruples(statements):
+    quadruples = []
+    for stmt in statements:
+        left,expr = stmt.replace(" ","").split("=")
+
+        if '+' in expr:
+            op1, op2 = expr.split('+')
+            op = '+'
+        elif '-' in expr:
+            op1, op2 = expr.split('-')
+            op = '-'
+        elif '*' in expr:
+            op1, op2 = expr.split('*')
+            op = '*'
+        elif '/' in expr:
+            op1, op2 = expr.split('/')
+            op = '/'
+        else:
+            op = '='
+            op1 = expr
+            op2 = '-'
+        quadruples.append((op, op1, op2, left))
+    return quadruples
+
+def display_quadruples(quadruples):
+    print("Index | Operator | Arg1 | Arg2 | Result")
+    print("----------------------------------------")
+    for idx, (op, arg1, arg2, res) in enumerate(quadruples):
+        print(f"{idx:<5} | {op:<8} | {arg1:<4} | {arg2:<4} | {res}")
+
+n = int(input("Enter number of statements: "))
+statements = []
+for _ in range(n):
+    statements.append(input("Enter 3AC statement (e.g. t1 = a + b): "))
+quadruples = generate_quadruples(statements)
+display_quadruples(quadruples)
+
+
+
+
+TRIPLES
+def generate_triples(statements):
+    triples = []
+    temp_map = {}
+    for stmt in statements:
+        left, rhs = stmt.replace(" ", "").split("=")
+        if '+' in rhs:
+            op1, op2 = rhs.split('+')
+            op = '+'
+            op1 = temp_map.get(op1, op1)
+            op2 = temp_map.get(op2, op2)
+        elif '-' in rhs:
+            op1, op2 = rhs.split('-')
+            op = '-'
+            op1 = temp_map.get(op1, op1)
+            op2 = temp_map.get(op2, op2)
+        elif '*' in rhs:
+            op1, op2 = rhs.split('*')
+            op = '*'
+            op1 = temp_map.get(op1, op1)
+            op2 = temp_map.get(op2, op2)
+        elif '/' in rhs:
+            op1, op2 = rhs.split('/')
+            op = '/'
+            op1 = temp_map.get(op1, op1)
+            op2 = temp_map.get(op2, op2)
+        else:
+            op = '='
+            op1 = temp_map.get(rhs, rhs)
+            op2 = '-'
+        index = len(triples)
+        triples.append((op, op1, op2))
+        temp_map[left] = f"({index})"
+    return triples
+
+def display_triples(triples):
+    print("Index | Operator | Arg1 | Arg2")
+    print("------------------------------")
+    for i, (op, arg1, arg2) in enumerate(triples):
+       print(f"{i:<5} | {op:<8} | {arg1:<4} | {arg2}")
+
+statements = [
+    "t = a - b",
+    "u = a - c",
+    "v = t + u",
+    "d = v + u"
+]
+triples = generate_triples(statements)
+display_triples(triples)
+ 
